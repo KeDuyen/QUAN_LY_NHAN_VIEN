@@ -3,15 +3,18 @@
 void LuaChonMenuChinh(short x, short y, short w, short h, int bg_color, int t_color, int sl);
 void ThanhSangMenuChinh(short x, short y, short w, short h, int bg_color_light, int t_color); // thanh sang se hien len khi ta bam phim
 int DiChuyenMenuChinh();
-void MenuChinh();
+void MenuChinh(NV &pList, TREE &t);
 
 
 
 
 void LuaChonMenuChinh(short x, short y, short w, short h, int bg_color, int t_color, int sl) {
-	string str1="\t          RAN SAN MOI";
-	string str2="1. Bat dau.";
-	string str3="2. Thoat tro choi.";
+	string str1="\t          QUAN LY VAT TU";
+	string str2="1. Danh sach nhan vien.";
+	string str3="2. Danh sach vat tu.";
+	string str4="3. Danh sach hoa don.";
+	string str5="4. Doanh thu";
+	string str6="0. Thoat chuong trinh va luu.";
 	for (int i = 0; i < sl; i++) {
 		BoxMenu(x,y+(i*h),w,h,bg_color,t_color);
 		if (i!=0) {
@@ -30,12 +33,21 @@ void LuaChonMenuChinh(short x, short y, short w, short h, int bg_color, int t_co
 			cout << str2;
 		if (i==2)
 			cout << str3;
+		if (i==3)
+			cout << str4;
+		if (i==4)
+			cout << str5;
+		if (i==5)
+			cout << str6;
 	}
 }
 
 void ThanhSangMenuChinh(short x, short y, short w, short h, int bg_color_light, int t_color) { // thanh sang se hien len khi ta bam phim
-	string str2="1. Bat dau.";
-	string str3="2. Thoat tro choi.";
+	string str2="1. Danh sach nhan vien.";
+	string str3="2. Danh sach vat tu.";
+	string str4="3. Danh sach hoa don.";
+	string str5="4. Doanh thu";
+	string str6="0. Thoat chuong trinh va luu.";
 	SetColor(bg_color_light,t_color);
 	for (short iy=y+1; iy<=y+h-1; iy++) {
 		for (short ix=x+1; ix<=x+w-1; ix++) {
@@ -49,18 +61,24 @@ void ThanhSangMenuChinh(short x, short y, short w, short h, int bg_color_light, 
 		cout << str2;
 	if (i==2)
 		cout << str3;
+	if (i==3)
+		cout << str4;
+	if (i==4)
+		cout << str5;
+	if (i==5)
+		cout << str6;
 }
 
 int DiChuyenMenuChinh() {
 	ShowCur(0); // 0 la tat con tro nhap nhay, 1 la hien con tro nhap nhay
-	short x=20;
+	short x=40;
 	short y=6;
 	short w=50;
 	short h=2;
 	int t_color=11;
 	int bg_color=9;
 	int bg_color_light=12;
-	int sl=3;
+	int sl=6;
 	LuaChonMenuChinh(x,y,w,h,bg_color,t_color,sl);
 	ThanhSangMenuChinh(x,y+h,w,h,bg_color_light,t_color); //  vi tri y truyen vao y+h vi hop dau se khong sang
 	short xp=x;
@@ -108,27 +126,43 @@ int DiChuyenMenuChinh() {
 	return chucnang;
 }
 
-void MenuChinh() {
+void MenuChinh(NV &pList, TREE &t) {
 	int chucnang;
 	do {
 		system ("cls");
 		chucnang = DiChuyenMenuChinh();
 		switch (chucnang) {
 			case 1: {
-				play();
+				MenuChinhNhanVien(pList);
+				break;
+			}
+			case 2: {
+				MenuChinhVatTu(t,pList);
+				break;
+			}
+			case 3: {
+				MenuChinhHoaDon(pList,t);
+				break;
+			}
+			case 4: {
+				MenuChinhDoanhThu(t,pList);
 				break;
 			}
 		}
-		if (chucnang == 2) {
-			Goto(30,6); 
-			SetColor(0,10);
-			cout << "GAME OVER";
-			getch();
+		if (chucnang == 5) {
+			int sl = DemSoVatTu(t);
+			VatTu p[sl];
+			TREE stack[sl];
+			int dem = TachCayThanhMang(t,p,stack);
+			Ghi_File(p,dem);
+			GhiDanhSachNhanVien(pList);
+			GiaiPhongVT(t);
+			XoaTatCaDSHD_DSCTHD(pList);
+			XoaDanhSachNhanVien(pList);
 			break;
 		}
 	} while (true);
 }
-
 
 
 
